@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import Overview from "./Overview";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [input, setInput] = useState("");
+  const [renderList, setRenderList] = useState([]);
+
+  function handleChange(event) {
+    setInput(event.target.value);
+  }
+
+  function handleClick(e) {
+    e.preventDefault();
+    setRenderList((prevList) => [...prevList, input]);
+  }
+
+  function handleDelete(id) {
+    setRenderList((prevList) => prevList.filter((i, index) => index !== id));
+  }
+
+  const lists = renderList.map((i, index) => (
+    <Overview key={index} id={index} content={i} onClick={handleDelete} />
+  ));
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+      <ul>{lists}</ul>
+      <form>
+        <label htmlFor="task">Enter task</label>
+        <input type="text" id="task" onChange={handleChange}></input>
+        <button className="btn" onClick={handleClick}>
+          Submit
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      </form>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
